@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+    <body>
+        <h1>Rohith Reddy Gurram</h1>
+        <h1>ID: 1001959477</h1>
+        
+        <p>All Earthquake Data(this month)</p>
+        <table border = 1>
+            <tr>
+                <td> Time </td>
+                <td> Latitude </td>
+                <td> Longitude </td>
+                <td> Depth </td>
+                <td> Magnitude </td>
+                <td> magtype </td>
+                <td> nst </td>
+                <td> gap </td>
+                <td> dmin </td>
+                <td> rms </td>
+                <td> net </td>
+                <td> ID </td>
+                <td> updated </td>
+                <td> Place </td>
+                <td> type </td>
+                <td> horizontalError </td>
+                <td> depthError </td>
+                <td> magError </td>
+                <td> magNst </td>
+                <td> status </td>
+                <td> locationSource </td>
+                <td> magSource </td>
+            </tr>
+            {% for x in data %}
+            <tr>
+                <td> {{x[0]}}</td>
+                <td> {{x[1]}}</td>
+                <td> {{x[2]}}</td>
+                <td> {{x[3]}}</td>
+                <td> {{x[4]}}</td>
+                <td> {{x[5]}}</td>
+                <td> {{x[6]}}</td>
+                <td> {{x[7]}}</td>
+                <td> {{x[8]}}</td>
+                <td> {{x[9]}}</td>
+                <td> {{x[10]}}</td>
+                <td> {{x[11]}}</td>
+                <td> {{x[12]}}</td>
+                <td> {{x[13]}}</td>
+                <td> {{x[14]}}</td>
+                <td> {{x[15]}}</td>
+                <td> {{x[16]}}</td>
+                <td> {{x[17]}}</td>
+                <td> {{x[18]}}</td>
+                <td> {{x[19]}}</td>
+                <td> {{x[20]}}</td>
+                <td> {{x[21]}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>
