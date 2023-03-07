@@ -39,6 +39,19 @@
             <input type="submit" name="action"></button>
         </form>
 
+        <h3> Q 12: Cities Data(Run 'N' number of times) using Redis</h3>
+        <form action="{{ url_for("redisq12")}}" method="post">
+            <label for="rank1">Rank 1:</label>
+            <input type="number" id="rank1" name="rk1">
+            <label for="rank2">Rank 2:</label>
+            <input type="number" id="rank2" name="rk2">
+            <label for="state">State:</label>
+            <input type="text" id="state" name="st">
+            <label for="nooftimes">Number of times to loop:</label>
+            <input type="number" id="nooftimes" name="num">
+            <input type="submit" name="action"></button>
+        </form>
+
         <h3> Generate random 1000 queries and calculate time taken for completion(using Redis)</h3>
         <form action="{{ url_for("redis")}}" method="post">
             <input type="submit" name="action"></button>
