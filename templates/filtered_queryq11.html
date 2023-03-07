@@ -30,6 +30,8 @@
         </table>
         
         <p> Time taken to perform the filtered queries</p>
-        <h3> {{ time }}</h3>
+        {% for t in timetaken %}
+            <h3> {{t}}</h3>
+        {% endfor %}
     </body>
 </html>
