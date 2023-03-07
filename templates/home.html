@@ -4,12 +4,43 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-    </head>
+        <title>Assignment 3</title>
 
     <body>
-        <h3> Get all the Earthquake data for the month</h3>
-        <form action="{{ url_for("home")}}" method="post">
+        <h1>Rohith Reddy Gurram</h1>
+        <h1>ID: 1001959477</h1>
+        
+        <h3> Generate random 1000 queries and calculate time taken for completion</h3>
+        <form action="{{ url_for("randomquery")}}" method="post">
+            <input type="submit" name="action"></button>
+        </form>
+
+        <h3> Q 10: Cities Data </h3>
+        <form action="{{ url_for("filteredquery")}}" method="post">
+            <label for="rank1">Rank 1:</label>
+            <input type="number" id="rank1" name="rk1">
+            <label for="rank2">Rank 2:</label>
+            <input type="number" id="rank2" name="rk2">
+            <label for="state">State:</label>
+            <input type="text" id="state" name="st">
+            <input type="submit" name="action"></button>
+        </form>
+
+        <h3> Q 11: Cities Data(Run 'N' number of times)</h3>
+        <form action="{{ url_for("filteredqueryq11")}}" method="post">
+            <label for="rank1">Rank 1:</label>
+            <input type="number" id="rank1" name="rk1">
+            <label for="rank2">Rank 2:</label>
+            <input type="number" id="rank2" name="rk2">
+            <label for="state">State:</label>
+            <input type="text" id="state" name="st">
+            <label for="nooftimes">Number of times to loop:</label>
+            <input type="number" id="nooftimes" name="num">
+            <input type="submit" name="action"></button>
+        </form>
+
+        <h3> Generate random 1000 queries and calculate time taken for completion(using Redis)</h3>
+        <form action="{{ url_for("redis")}}" method="post">
             <input type="submit" name="action"></button>
         </form>
     </body>
