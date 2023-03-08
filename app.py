@@ -13,9 +13,7 @@ database = 'DemoSQLServerDB'
 connection_string = 'Driver={ODBC Driver 18 for SQL Server};Server=tcp:freecloudsqlserver001.database.windows.net,1433;Database=DemoSQLServerDB;Uid=RohithGurram;Pwd={freecloudsqlserver@123};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;'
 conn = odbc.connect(connection_string)
 
-#redis_client = Redis(connection_pool=ConnectionPool(host='your_cache_name.redis.cache.windows.net', port=6379, ssl=True, password='your_access_key'))
-#redis_client = redis.Redis(host='localhost', port=6379, db=0)
-redis_client = redis.Redis(host='10.182.87.226', port=6379, db=0)
+redis_client = redis.Redis(host='10.207.101.192', port=6379, db=0)
 
 def create_redis_client():
     redis_client = redis.Redis(host='localhost', port=6379, db=0)
