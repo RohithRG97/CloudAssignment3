@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 3</title>
+
+</head>
+    <body>
+        <h1>Rohith Reddy Gurram</h1>
+        <h2>ID: 1001959477</h2>
+        
+        <p>Earthquake data</p>
+        <p>Scroll to the bottom to see the times</p>
+        <table border = 2>
+            <tr>
+                <td> Latitude </td>
+                <td> Longitude </td>
+                <td> Depth </td>
+                <td> Magnitude </td>
+                <td> ID </td>
+                <td> Place </td>
+                <td> Type </td>
+            </tr>
+            {% for x in data %}
+            <tr>
+                <td> {{x[0]}}</td>
+                <td> {{x[1]}}</td>
+                <td> {{x[2]}}</td>
+                <td> {{x[3]}}</td>
+                <td> {{x[4]}}</td>
+                <td> {{x[5]}}</td>
+                <td> {{x[6]}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        
+        <h3> Individual Times of filtered queries</h3>
+        {% for t in timetaken %}
+            <p> {{t}}</p>
+        {% endfor %}
+
+        <h3> Total Time taken to perform the filtered queries</h3>
+        <p> {{total_time}}</p>
+    </body>
+</html>

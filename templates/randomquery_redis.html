@@ -4,14 +4,20 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Assignment 3</title>
 
 </head>
     <body>
         <h1>Rohith Reddy Gurram</h1>
         <h1>ID: 1001959477</h1>
         
-        <p> Time taken to perform all the queries</p>
-        <h3> {{ time }}</h3>
+        <h3> Individual Times taken to perform the filtered queries via Redis</h3>
+        {% for t in timer %}
+            <p> {{t}}</p>
+        {% endfor %}
+
+        <h3> Total Time taken to perform the filtered queries via Redis</h3>
+        <p>{{time}}</p>
+        
     </body>
 </html>
