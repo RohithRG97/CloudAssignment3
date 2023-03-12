@@ -17,7 +17,7 @@ connection_string = 'Driver={ODBC Driver 18 for SQL Server};Server=tcp:freecloud
 conn = odbc.connect(connection_string)
 
 # Connection details for Redis
-redis_cache = redis.Redis(host='10.207.101.192', port=6379, db=0)
+redis_cache = redis.Redis(host='10.207.170.226', port=6379, db=0)
 
 
 @app.route('/', methods =["GET", "POST"])
