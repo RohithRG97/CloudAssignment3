@@ -16,8 +16,10 @@ app = Flask(__name__)
 connection_string = 'Driver={ODBC Driver 18 for SQL Server};Server=tcp:freecloudsqlserver001.database.windows.net,1433;Database=DemoSQLServerDB;Uid=RohithGurram;Pwd={freecloudsqlserver@123};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;'
 conn = odbc.connect(connection_string)
 
+server = '10.207.170.226'
+portno = 6379
 # Connection details for Redis
-redis_cache = redis.Redis(host='10.207.170.226', port=6379, db=0)
+redis_cache = redis.StrictRedis(host=server, port=portno, decode_responses=True)
 
 
 @app.route('/', methods =["GET", "POST"])
