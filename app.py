@@ -1,205 +1,93 @@
-# Name: Rohith Reddy Gurram
-# ID: 1001959477
-# Course: CSE 6331
-# Programming Assignment 3
-
 import json
 import random
-from flask import Flask, render_template, request, url_for
+from flask import Flask, render_template, request, url_for, jsonify
 import pypyodbc as odbc
-import time 
-import redis
+import plotly.graph_objs as go
 
 app = Flask(__name__)
 
-# Connection details for SQL Server
 connection_string = 'Driver={ODBC Driver 18 for SQL Server};Server=tcp:freecloudsqlserver001.database.windows.net,1433;Database=DemoSQLServerDB;Uid=RohithGurram;Pwd={freecloudsqlserver@123};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;'
 conn = odbc.connect(connection_string)
-
-server = '10.207.170.226'
-portno = 6379
-# Connection details for Redis
-redis_cache = redis.StrictRedis(host=server, port=portno, decode_responses=True)
-
 
 @app.route('/', methods =["GET", "POST"])
 def home():
     if request.method == "GET":
         return render_template("home.html")
 
+@app.route('/scatterpage.html', methods =["GET", "POST"])
+def scatterpage():
+    # Replace this with your data retrieval code
+    sql_stmt1 = "SELECT TOP 10 depth, mag FROM dbo.earthquake_data"
+    
+    
+    cursor = conn.cursor()
+    cursor.execute(sql_stmt1)
+    result = cursor.fetchall()
+    
+    #data = [{'x': row[0], 'y': row[1]} for row in data]
+    data = {'x': [], 'y': []}
+    for row in result:
+        data['x'].append(row[0])
+        data['y'].append(row[1])
+    json_data = json.dumps(data)
 
-@app.route('/randomquery.html', methods =["GET", "POST"])
-def randomquery():
-    if request.method == "POST":
-        timer = []
-        num = request.form.get("num")
+    conn.close()
+    
+    return render_template('scatterpage.html', data=json_data)
 
-        # start time for calculating total time
-        start_time1 = time.time()
-        for i in range(int(num)):
-            # generate random values for the query
-            lat = random.uniform(-90, 90)
-            long = random.uniform(-180,180)
-            depth = random.uniform(1, 20)
-            
-            # build the query
-            sql_stmt = "SELECT * FROM dbo.earthquake_data WHERE latitude = ? AND longitude = ? AND depth = ?"
-            values = (lat, long, depth)
-            
-            # start time for calculating single transaction time
-            start_time2 = time.time()
-            
-            # execute the query
-            cursor = conn.cursor()
-            cursor.execute(sql_stmt, values)
-            results = cursor.fetchall()
+@app.route('/piechart1', methods =["GET", "POST"])
+def piechart1():
+    sql_stmt1 = "SELECT COUNT(*) FROM dbo.earthquake_data WHERE mag < 1"
+    sql_stmt2 = "SELECT COUNT(*) FROM dbo.earthquake_data WHERE mag >= 1 AND mag < 2"
+    sql_stmt3 = "SELECT COUNT(*) FROM dbo.earthquake_data WHERE mag >= 2 AND mag < 3"
+    sql_stmt4 = "SELECT COUNT(*) FROM dbo.earthquake_data WHERE mag >= 3"
+    
+    
+    cursor = conn.cursor()
+    cursor.execute(sql_stmt1)
+    d1 = cursor.fetchone()[0]
+    cursor.execute(sql_stmt2)
+    d2 = cursor.fetchone()[0]
+    cursor.execute(sql_stmt3)
+    d3 = cursor.fetchone()[0]
+    cursor.execute(sql_stmt4)
+    d4 = cursor.fetchone()[0]
 
-            # end time for calculating single transaction time
-            end_time2 = time.time()
-            exec_time = end_time2-start_time2
-            
-            # Saving transaction times into a list
-            timer.append(exec_time)
+    labels = ["0 to 1", "1 to 2", "2 to 3", "Above 3"]
+    values = [d1, d2, d3, d4]
+    
+    fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
+    chart = fig.to_html(full_html=False)
 
-        # end time for calculating total time
-        end_time1 = time.time()
-        total_time = end_time1- start_time1
-        return render_template("randomquery.html", total_time=total_time, timer=timer)
+    #return jsonify(data)
+    return render_template('piechart1.html', chart=chart)
+    
+    #return render_template('piechart1.html', data=jsonify(response))
 
+@app.route('/barchart1', methods =["GET", "POST"])
+def barchart1():
+    sql_stmt1 = "SELECT COUNT(*) FROM dbo.earthquake_data WHERE mag < 1"
+    sql_stmt2 = "SELECT COUNT(*) FROM dbo.earthquake_data WHERE mag >= 1 AND mag < 2"
+    sql_stmt3 = "SELECT COUNT(*) FROM dbo.earthquake_data WHERE mag >= 2 AND mag < 3"
+    sql_stmt4 = "SELECT COUNT(*) FROM dbo.earthquake_data WHERE mag >= 3"
+    
+    
+    cursor = conn.cursor()
+    cursor.execute(sql_stmt1)
+    d1 = cursor.fetchone()[0]
+    cursor.execute(sql_stmt2)
+    d2 = cursor.fetchone()[0]
+    cursor.execute(sql_stmt3)
+    d3 = cursor.fetchone()[0]
+    cursor.execute(sql_stmt4)
+    d4 = cursor.fetchone()[0]
 
-@app.route('/restrictedquery.html', methods =["GET", "POST"])
-def restrictedquery():
-    if request.method == "POST":
-        # start time for calculating total time
-        start_time2 = time.time()
-        mag1 = request.form.get("mag1")
-        mag2 = request.form.get("mag2")
-        num = request.form.get("num")
+    labels = ["0 - 1", "1 - 2", "2 - 3", "Above 3"]
+    values = [d1, d2, d3, d4]
+    
+    fig = go.Figure(data=[go.Bar(x=labels, y=values)])
+    chart = fig.to_html(full_html=False)
 
-        timetaken =  []
-        
-        for i in range(int(num)):
-            start_time = time.time()
-            sql = '''SELECT latitude, longitude, depth, mag, id, place, type FROM dbo.earthquake_data 
-                WHERE mag BETWEEN ? AND ?'''
-            values = (mag1, mag2)
-
-            #Fetching data from database
-            cursor = conn.cursor()
-            cursor.execute(sql, values)
-            results = cursor.fetchall()
-
-            # end time for calculating single transaction time
-            end_time = time.time()
-            total_time = end_time - start_time
-            timetaken.append(total_time)
-        
-        # end time for calculating total time
-        end_time2 = time.time()
-        totality_time = end_time2 - start_time2
-        
-        return render_template("restrictedquery.html", timetaken = timetaken, data = results, totality_time = totality_time)
-
-
-@app.route('/randomquery_redis.html', methods =["GET", "POST"])
-def randomquery_redis():
-    if request.method == "POST":
-        timer = []
-        num = request.form.get("num")
-        # start time for calculating total time
-        start_time1 = time.time()
-        for i in range(int(num)):
-            
-            # generate random values for the query
-            lat = random.uniform(-90, 90)
-            long = random.uniform(-180,180)
-            depth = random.uniform(1, 20)
-            
-            sql = "SELECT * FROM dbo.earthquake_data WHERE latitude = ? AND longitude = ?"
-            values = (lat, long)
-            my_string = json.dumps(values)
-            sql_key = my_string
-
-            # start time for calculating single transaction time
-            start_time2 = time.time()
-
-            # Check whether the data exists in Redis or not
-            if redis_cache.exists(sql_key):
-                results = redis_cache.get(json.loads(sql_key))
-            else:
-                # Fetching data from database
-                cursor = conn.cursor()
-                cursor.execute(sql, values)
-                results = cursor.fetchall()
-
-                # Storing the data in Redis 
-                s_data = json.dumps(results)
-                redis_cache.set(sql_key, s_data)
-            
-            # end time for calculating single transaction time
-            end_time2 = time.time()
-            time1 = end_time2 - start_time2
-
-            # Saving each transaction time in a list
-            timer.append(time1)
-
-        # end time for calculating total time
-        end_time1 = time.time()
-        total_time = end_time1 - start_time1
-        return render_template("randomquery_redis.html", time=total_time, timer=timer)
-
-
-@app.route('/restrictedquery_redis.html', methods =["GET", "POST"])
-def restrictedquery_redis():
-    if request.method == "POST":
-        # start time for calculating total time
-        start_time1 = time.time()
-        mag1 = request.form.get("mag1")
-        mag2 = request.form.get("mag2")
-        num = request.form.get("num")
-
-        timetaken =  []
-        
-        for i in range(int(num)):
-            
-            sql = '''SELECT latitude, longitude, depth, mag, id, place, type FROM dbo.earthquake_data 
-                WHERE mag BETWEEN ? AND ?'''
-            values = (mag1, mag2)
-            my_string = json.dumps(values)
-            sql_key = my_string
-            # start time for calculating single transaction time
-            start_time = time.time()
-
-            # Check whether the data exists in Redis or not
-            if redis_cache.exists(sql_key):
-                results = redis_cache.get(sql_key)
-            else:
-                # Fetching the data from Database
-                cursor = conn.cursor()
-                cursor.execute(sql, values)
-                results = cursor.fetchall()
-
-                # Storing the data in Redis
-                s_data = json.dumps(results)
-                redis_cache.set(sql_key, s_data)
-
-            # end time for calculating single transaction time
-            end_time = time.time()
-            total_time = end_time - start_time
-
-            # Saving each transaction time in a list
-            timetaken.append(total_time)
-
-        # end time for calculating total time
-        end_time1 = time.time()
-        total_time = end_time1 - start_time1
-        
-        cursor = conn.cursor()
-        cursor.execute(sql, values)
-        results = cursor.fetchall()
-
-        return render_template("restrictedquery_redis.html", timetaken = timetaken, data = results, total_time = total_time)
-        
-
-if __name__ == "__main__":
-    app.run(debug=True)
+    #return jsonify(data)
+    return render_template('barchart1.html', chart=chart)
+    

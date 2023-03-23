@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Plotly Chart</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <div id="my-plot"></div>
+
+    <script>
+        var data = {{ data | safe }};
+        var trace = {
+            x: data.x,
+            y: data.y,
+            type: 'scatter'
+        };
+        var layout = {
+            title: 'My Plotly Chart'
+        };
+        Plotly.newPlot('my-plot', [trace], layout);
+    </script>
+</body>
+</html>
